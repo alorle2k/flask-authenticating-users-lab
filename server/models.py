@@ -1,3 +1,4 @@
+
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
 from marshmallow import Schema, fields
@@ -7,6 +8,7 @@ metadata = MetaData(naming_convention={
 })
 
 db = SQLAlchemy(metadata=metadata)
+
 
 class Article(db.Model):
     __tablename__ = 'articles'
@@ -24,6 +26,7 @@ class Article(db.Model):
     def __repr__(self):
         return f'Article {self.id} by {self.author}'
 
+
 class User(db.Model):
     __tablename__ = 'users'
 
@@ -35,11 +38,15 @@ class User(db.Model):
     def __repr__(self):
         return f'User {self.username}, ID {self.id}'
 
+
 class UserSchema(Schema):
     id = fields.Int()
     username = fields.String()
 
-    articles = fields.List(fields.Nested(lambda: ArticlesSchema(exclude=("user",))))
+    articles = fields.List(
+        fields.Nested(lambda: ArticlesSchema(exclude=("user",)))
+    )
+
 
 class ArticlesSchema(Schema):
     id = fields.Int()
